@@ -1,6 +1,5 @@
-
 import React, { useCallback, useState } from 'react';
-import { PdfIcon, UploadIcon, FileGenericIcon, SpinnerIcon, CheckCircleIcon, XCircleIcon } from './icons/Icons';
+import { PdfIcon, UploadIcon, FileGenericIcon, SpinnerIcon, CheckCircleIcon, XCircleIcon, ClockIcon } from './icons/Icons';
 import type { FileWithStatus } from '../types';
 
 interface FileUploadProps {
@@ -60,18 +59,41 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFilesAdd, onFileRemove
     ? 'border-indigo-500 bg-indigo-50 dark:bg-gray-700'
     : 'border-gray-300 dark:border-gray-600 hover:border-indigo-400 dark:hover:border-indigo-500';
 
-  const getStatusIcon = (status: FileWithStatus['status']) => {
+  const renderStatus = (status: FileWithStatus['status']) => {
     switch (status) {
-        case 'processing':
-            return <SpinnerIcon className="flex-shrink-0 h-5 w-5 text-indigo-500" aria-label="Processing" />;
-        case 'done':
-            return <CheckCircleIcon className="flex-shrink-0 h-5 w-5 text-green-500" aria-label="Done" />;
-        case 'error':
-            return <XCircleIcon className="flex-shrink-0 h-5 w-5 text-red-500" aria-label="Error" />;
-        default:
-            return null;
+      case 'pending':
+        return (
+          <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+            <ClockIcon className="flex-shrink-0 h-4 w-4" aria-label="Pending" />
+            <span className="text-xs font-medium">Pending</span>
+          </div>
+        );
+      case 'processing':
+        return (
+          <div className="flex items-center gap-1 text-indigo-500 dark:text-indigo-400">
+            <SpinnerIcon className="flex-shrink-0 h-4 w-4" aria-label="Processing" />
+            <span className="text-xs font-medium">Processing...</span>
+          </div>
+        );
+      case 'done':
+        return (
+          <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
+            <CheckCircleIcon className="flex-shrink-0 h-4 w-4" aria-label="Done" />
+            <span className="text-xs font-medium">Done</span>
+          </div>
+        );
+      case 'error':
+        return (
+          <div className="flex items-center gap-1 text-red-600 dark:text-red-400">
+            <XCircleIcon className="flex-shrink-0 h-4 w-4" aria-label="Error" />
+            <span className="text-xs font-medium">Error</span>
+          </div>
+        );
+      default:
+        return null;
     }
-  }
+  };
+
 
   return (
     <div>
@@ -102,20 +124,24 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFilesAdd, onFileRemove
                 <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Selected Files:</h4>
                 <ul role="list" className="mt-2 border border-gray-200 dark:border-gray-700 rounded-md divide-y divide-gray-200 dark:divide-gray-700">
                     {files.map((fileWithStatus) => (
-                        <li key={fileWithStatus.id} className="pl-3 pr-4 py-3 flex items-center justify-between text-sm flex-wrap">
-                            <div className="w-0 flex-1 flex items-center">
-                                {fileWithStatus.file.type === 'application/pdf' ? <PdfIcon className="flex-shrink-0 h-5 w-5 text-gray-400" /> : <FileGenericIcon className="flex-shrink-0 h-5 w-5 text-gray-400" />}
-                                <span className="ml-2 flex-1 w-0 truncate text-gray-800 dark:text-gray-200">{fileWithStatus.file.name}</span>
+                        <li key={fileWithStatus.id} className="px-3 py-3 text-sm">
+                            <div className="flex items-center justify-between gap-4 flex-wrap">
+                                <div className="w-0 flex-1 flex items-center min-w-0">
+                                    {fileWithStatus.file.type === 'application/pdf' ? <PdfIcon className="flex-shrink-0 h-5 w-5 text-gray-400" /> : <FileGenericIcon className="flex-shrink-0 h-5 w-5 text-gray-400" />}
+                                    <span className="ml-2 flex-1 w-0 truncate text-gray-800 dark:text-gray-200" title={fileWithStatus.file.name}>{fileWithStatus.file.name}</span>
+                                </div>
+                                <div className="flex-shrink-0 flex items-center gap-3">
+                                    {renderStatus(fileWithStatus.status)}
+                                    <button onClick={() => onFileRemove(fileWithStatus.id)} className="font-medium text-red-600 hover:text-red-500 disabled:opacity-50 text-xs" disabled={disabled}>
+                                        Remove
+                                    </button>
+                                </div>
                             </div>
-                            <div className="ml-4 flex-shrink-0 flex items-center gap-3">
-                                {getStatusIcon(fileWithStatus.status)}
-                                <button onClick={() => onFileRemove(fileWithStatus.id)} className="font-medium text-red-600 hover:text-red-500 disabled:opacity-50" disabled={disabled}>
-                                    Remove
-                                </button>
-                            </div>
-                             {fileWithStatus.error && (
-                                <div className="w-full pl-7 mt-1">
-                                    <p className="text-xs text-red-600 dark:text-red-400" role="alert">Error: {fileWithStatus.error}</p>
+                            {fileWithStatus.error && (
+                                <div className="pl-7 mt-1.5">
+                                    <div className="p-2 rounded-md bg-red-50 dark:bg-red-900/30">
+                                      <p className="text-xs text-red-700 dark:text-red-300" role="alert">{fileWithStatus.error}</p>
+                                    </div>
                                 </div>
                             )}
                         </li>
