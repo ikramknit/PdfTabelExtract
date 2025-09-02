@@ -121,11 +121,6 @@ export default function App() {
     
     setFiles(currentFiles => currentFiles.map(f => ({ ...f, status: 'pending', error: undefined })));
 
-    if (!process.env.API_KEY) {
-        setError("API_KEY environment variable is not set.");
-        setIsLoading(false);
-        return;
-    }
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const results: ExtractedData = [];
     
