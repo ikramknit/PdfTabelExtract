@@ -1,0 +1,5 @@
+{
+  "name": "PDF Table Extractor",
+  "description": "Upload a PDF document to intelligently extract structured information and display it in a table format using the power of AI.",
+  "requestFramePermissions": []
+}
