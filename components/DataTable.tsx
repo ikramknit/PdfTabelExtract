@@ -4,9 +4,10 @@ import type { ExtractedData } from '../types';
 
 interface DataTableProps {
   data: ExtractedData;
+  headers: string[];
 }
 
-export const DataTable: React.FC<DataTableProps> = ({ data }) => {
+export const DataTable: React.FC<DataTableProps> = ({ data, headers }) => {
   if (!data || data.length === 0) {
     return (
       <div className="text-center py-10 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800 rounded-lg shadow">
@@ -17,8 +18,6 @@ export const DataTable: React.FC<DataTableProps> = ({ data }) => {
       </div>
     );
   }
-
-  const headers = Object.keys(data[0]);
 
   return (
     <div className="flex flex-col">
@@ -44,7 +43,7 @@ export const DataTable: React.FC<DataTableProps> = ({ data }) => {
                   <tr key={rowIndex} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
                     {headers.map((header) => (
                       <td key={`${rowIndex}-${header}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
-                        {String(row[header])}
+                        {String(row[header] ?? '')}
                       </td>
                     ))}
                   </tr>
