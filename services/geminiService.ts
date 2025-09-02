@@ -1,4 +1,3 @@
-
 import { GoogleGenAI } from '@google/genai';
 import type { ExtractedData } from '../types';
 
@@ -21,10 +20,12 @@ const fileToGenerativePart = async (file: File) => {
 };
 
 export const extractInformationFromPDF = async (file: File): Promise<ExtractedData> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API_KEY environment variable is not set.");
+  // FIX: Use process.env.API_KEY as per the coding guidelines.
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) {
+    throw new Error("API_KEY environment variable is not set. Please ensure it's configured in your hosting environment.");
   }
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey });
 
   const pdfPart = await fileToGenerativePart(file);
 

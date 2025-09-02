@@ -9,6 +9,7 @@ import { Header } from './components/Header';
 import { Welcome } from './components/Welcome';
 import { HeaderSelector } from './components/HeaderSelector';
 import type { ExtractedData } from './types';
+import { PdfPreview } from './components/PdfPreview';
 
 
 export default function App() {
@@ -130,6 +131,9 @@ export default function App() {
         <Header />
         <div className="max-w-3xl mx-auto mt-8 p-6 md:p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
           <FileUpload onFileSelect={handleFileSelect} file={file} disabled={isLoading} />
+          
+          {file && !isLoading && <PdfPreview file={file} />}
+          
           <div className="mt-6">
             <button
               onClick={handleExtract}
