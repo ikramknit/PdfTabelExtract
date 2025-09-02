@@ -4,31 +4,21 @@ import type { ExtractedData } from '../types';
 
 interface DataTableProps {
   data: ExtractedData;
-  headers: string[];
 }
 
-export const DataTable: React.FC<DataTableProps> = ({ data, headers }) => {
+export const DataTable: React.FC<DataTableProps> = ({ data }) => {
   if (!data || data.length === 0) {
     return (
       <div className="text-center py-10 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800 rounded-lg shadow">
         <h3 className="text-lg font-medium text-gray-900 dark:text-white">No Data Extracted</h3>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            The model could not find any structured data to display from the uploaded document(s).
+            The model could not find any structured data to display from the uploaded document.
         </p>
       </div>
     );
   }
 
-  if (headers.length === 0) {
-     return (
-      <div className="text-center py-10 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800 rounded-lg shadow">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white">No Columns Selected</h3>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Please select one or more columns from the list above to display the data.
-        </p>
-      </div>
-    );
-  }
+  const headers = Object.keys(data[0]);
 
   return (
     <div className="flex flex-col">
@@ -51,17 +41,12 @@ export const DataTable: React.FC<DataTableProps> = ({ data, headers }) => {
               </thead>
               <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                 {data.map((row, rowIndex) => (
-                  <tr key={rowIndex} className="group hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
-                    {headers.map((header) => {
-                      return (
-                        <td 
-                          key={`${rowIndex}-${header}`} 
-                          className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
-                        >
-                          {String(row[header] || '')}
-                        </td>
-                      );
-                    })}
+                  <tr key={rowIndex} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+                    {headers.map((header) => (
+                      <td key={`${rowIndex}-${header}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                        {String(row[header])}
+                      </td>
+                    ))}
                   </tr>
                 ))}
               </tbody>
