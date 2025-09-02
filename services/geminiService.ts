@@ -20,12 +20,12 @@ const fileToGenerativePart = async (file: File) => {
 };
 
 export const extractInformationFromPDF = async (file: File): Promise<ExtractedData> => {
-  // FIX: Use process.env.API_KEY as per the coding guidelines.
-  const apiKey = process.env.API_KEY;
-  if (!apiKey) {
-    throw new Error("API_KEY environment variable is not set. Please ensure it's configured in your hosting environment.");
-  }
-  const ai = new GoogleGenAI({ apiKey });
+  // Fix: Adhere to the API key guideline by using process.env.API_KEY directly.
+  // This resolves the TypeScript error for `import.meta.env` and follows the strict
+  // requirement to source the API key exclusively from `process.env.API_KEY`.
+  // The non-null assertion (!) is used to align with the guideline's assumption
+  // that the API key is always available.
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 
   const pdfPart = await fileToGenerativePart(file);
 
